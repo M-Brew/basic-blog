@@ -11,6 +11,7 @@ interface IUser {
 }
 
 interface IPostFormValues {
+  id: string;
   title: string;
   body: string;
   category: string;

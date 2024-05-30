@@ -3,7 +3,7 @@ import { isAxiosError } from "axios";
 
 export const getPosts = async () => {
   try {
-    const response = await axios.get(`api/posts`);
+    const response = await axios.get(`/posts`);
 
     return response;
   } catch (error) {
@@ -17,7 +17,7 @@ export const getPosts = async () => {
 
 export const getPost = async (id: string) => {
   try {
-    const response = await axios.get(`api/posts/${id}`);
+    const response = await axios.get(`/posts/${id}`);
 
     return response;
   } catch (error) {
@@ -31,7 +31,7 @@ export const getPost = async (id: string) => {
 
 export const addPost = async (payload: IPostFormValues) => {
   try {
-    const response = await axios.post(`api/posts`, {
+    const response = await axios.put(`/posts`, {
       ...payload,
     });
 
@@ -50,7 +50,7 @@ export const updatePost = async (
   payload: Partial<IPostFormValues>
 ) => {
   try {
-    const response = await axios.patch(`api/posts/${id}`, payload);
+    const response = await axios.put(`/posts/${id}`, payload);
 
     return response;
   } catch (error) {
@@ -64,7 +64,7 @@ export const updatePost = async (
 
 export const deletePost = async (id: string) => {
   try {
-    const response = await axios.delete(`api/posts/${id}`);
+    const response = await axios.delete(`/posts/${id}`);
 
     return response;
   } catch (error) {

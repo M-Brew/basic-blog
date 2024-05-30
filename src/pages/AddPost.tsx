@@ -43,8 +43,10 @@ export default function AddPost() {
 
     if (title !== "" && body !== "") {
       const response = await addPost({
+        id: Math.random().toString(36).substring(2, 7),
         title,
         body,
+        category,
         author:
           user?.firstName.toLowerCase() + "-" + user?.lastName.toLowerCase(),
         date: new Date().toISOString(),
