@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { useRouter, usePathname } from "next/navigation";
+
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -17,6 +20,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
+import MenuIcon from "@mui/icons-material/Menu";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import SubjectOutlinedIcon from "@mui/icons-material/SubjectOutlined";
 
@@ -33,7 +37,11 @@ export default function NavBar(props: INavBar) {
   const router = useRouter();
   const pathName = usePathname();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -44,12 +52,20 @@ export default function NavBar(props: INavBar) {
     setAnchorEl(null);
   };
 
+  const handleOpenDrawer = () => {
+    setOpenDrawer(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("firstName");
     localStorage.removeItem("lastName");
     handleClose();
-    router.replace("/")
-  }
+    router.replace("/");
+  };
 
   const menuItems = [
     {
@@ -67,14 +83,20 @@ export default function NavBar(props: INavBar) {
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+        sx={{
+          width: `calc(100% - ${matches ? drawerWidth : 0}px)`,
+          ml: `${matches ? drawerWidth : 0}px`,
+        }}
         elevation={0}
       >
         <Toolbar>
+          {!matches && <MenuIcon sx={{ mr: 1 }} onClick={handleOpenDrawer} />}
           <Typography sx={{ flexGrow: 1 }}>Daily Posts</Typography>
-          <Typography
-            sx={{ mr: 2 }}
-          >{`${user?.firstName} ${user?.lastName}`}</Typography>
+          {matches && (
+            <Typography
+              sx={{ mr: 2 }}
+            >{`${user?.firstName} ${user?.lastName}`}</Typography>
+          )}
           <Avatar
             sx={{ cursor: "pointer", bgcolor: teal[900] }}
             onClick={handleClick}
@@ -96,7 +118,9 @@ export default function NavBar(props: INavBar) {
       </AppBar>
       <Drawer
         anchor="left"
-        variant="permanent"
+        variant={matches ? "permanent" : "temporary"}
+        open={openDrawer}
+        onClose={handleCloseDrawer}
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -115,7 +139,12 @@ export default function NavBar(props: INavBar) {
           {menuItems.map((item, idx) => (
             <ListItemButton
               key={idx}
-              onClick={() => router.push(item.path)}
+              onClick={() => {
+                if (!matches) {
+                  handleCloseDrawer();
+                }
+                router.push(item.path);
+              }}
               sx={pathName === item.path ? { backgroundColor: "#f4f4f4" } : {}}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
