@@ -11,12 +11,10 @@ interface IUser {
 }
 
 interface IPostFormValues {
-  id: string;
   title: string;
   body: string;
   category: string;
   author: string;
-  date: string;
 }
 
 interface IPost {
@@ -25,5 +23,4 @@ interface IPost {
   body: string;
   category: string;
   author: string;
-  date: string;
 }

@@ -29,7 +29,7 @@ export default function Posts() {
   const handleDelete = async (id: string) => {
     try {
       const response = await deletePost(id);
-      if (response?.status === 200) {
+      if (response?.status === 204) {
         const updatedPosts = posts.filter((p) => p.id !== id);
         setPosts(updatedPosts);
       }
